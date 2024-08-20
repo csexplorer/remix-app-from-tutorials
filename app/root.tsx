@@ -4,13 +4,36 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
+  useLoaderData,
+  useRouteLoaderData,
 } from "@remix-run/react";
 import "./tailwind.css";
 import Header from "./components/header";
+import i18nServer, { localeCookie } from "./modules/i18n.server";
+import { useChangeLanguage } from "remix-i18next/react";
+import { LoaderFunctionArgs, json } from "@remix-run/node";
+
+// We'll configure the namespace to use here
+export const handle = { i18n: ["translation"] };
+
+export async function loader({ request }: LoaderFunctionArgs) {
+  const locale = await i18nServer.getLocale(request); // get the locale
+
+  return json(
+    { locale },
+    {
+      headers: {
+        "Set-Cookie": await localeCookie.serialize(locale),
+      },
+    }
+  );
+}
 
 export function Layout({ children }: { children: React.ReactNode }) {
+  const loaderData = useRouteLoaderData<typeof loader>("root");
+
   return (
-    <html lang="en">
+    <html lang={loaderData?.locale ?? "en"}>
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -28,5 +51,8 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
+  const { locale } = useLoaderData<typeof loader>();
+
+  useChangeLanguage(locale);
   return <Outlet />;
 }

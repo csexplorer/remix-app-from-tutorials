@@ -1,4 +1,8 @@
-import type { MetaFunction } from "@remix-run/node";
+import type { LoaderFunctionArgs, MetaFunction } from "@remix-run/node";
+import { json } from "@remix-run/node";
+import { useLoaderData } from "@remix-run/react";
+import { useTranslation } from "react-i18next";
+import i18nServer from "~/modules/i18n.server";
 
 export const meta: MetaFunction = () => {
   return [
@@ -7,10 +11,20 @@ export const meta: MetaFunction = () => {
   ];
 };
 
+export async function loader({ request }: LoaderFunctionArgs) {
+  const t = await i18nServer.getFixedT(request);
+
+  return json({ description: t("description") });
+}
+
 export default function Index() {
+  const { description } = useLoaderData<typeof loader>();
+  const { t } = useTranslation();
   return (
     <div className="font-sans p-4">
-      <h1 className="text-3xl">Welcome to Remix</h1>
+      <h1 className="text-3xl">{t("title")}</h1>
+      <p>{description}</p>
+
       <ul className="list-disc mt-4 pl-6 space-y-2">
         <li>
           <a
