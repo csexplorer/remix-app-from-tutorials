@@ -1,3 +1,17 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+main > * {
+  position: relative;
+  transition: all 0.3s 0.3s cubic-bezier(0.5, 0, 0.5, 1);
+  transition-property: opacity, transform;
+}
+
+[aria-hidden="true"] {
+  display: none;
+  opacity: 0;
+  transform: scale(0.8);
+  pointer-events: none;
+  transition-delay: 0s;
+}
