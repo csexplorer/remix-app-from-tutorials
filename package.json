@@ -14,14 +14,18 @@
     "@remix-run/node": "^2.11.1",
     "@remix-run/react": "^2.11.1",
     "@remix-run/serve": "^2.11.1",
+    "@supabase/supabase-js": "^2.45.2",
+    "arktype": "^2.0.0-rc.2",
     "i18next": "^23.14.0",
     "i18next-browser-languagedetector": "^8.0.0",
     "isbot": "^4.1.0",
+    "ky": "^1.7.1",
     "nprogress": "^0.2.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-i18next": "^15.0.1",
-    "remix-i18next": "^6.3.0"
+    "remix-i18next": "^6.3.0",
+    "string-ts": "^2.2.0"
   },
   "devDependencies": {
     "@remix-run/dev": "^2.11.1",
