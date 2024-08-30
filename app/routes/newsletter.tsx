@@ -1,6 +1,18 @@
-import { ActionFunctionArgs } from "@remix-run/node";
+import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { Form, Link, useActionData, useNavigation } from "@remix-run/react";
 import { useEffect, useRef } from "react";
+
+import { getSession } from "~/modules/session.server";
+import { redirect, json } from "@remix-run/node";
+
+export async function loader({ request }: LoaderFunctionArgs) {
+  const session = await getSession(request.headers.get("cookie"));
+
+  if (!session.has("userId")) {
+    return redirect("/login");
+  }
+  return json(null);
+}
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const formData = await request.formData();
@@ -59,7 +71,6 @@ export default function NewsletterRoute() {
     }
 
     if (state === "success") {
-      console.log({ successRef });
       successRef.current?.focus();
     }
 

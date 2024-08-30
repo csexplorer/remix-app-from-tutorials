@@ -19,6 +19,7 @@ import { useEffect, useMemo } from "react";
 import NProgress from "nprogress";
 
 import nProgressStyles from "nprogress/nprogress.css?url";
+import { getSession } from "./modules/session.server";
 // We'll configure the namespace to use here
 export const handle = { i18n: ["translation"] };
 
@@ -29,8 +30,12 @@ export const links: LinksFunction = () => {
 export async function loader({ request }: LoaderFunctionArgs) {
   const locale = await i18nServer.getLocale(request); // get the locale
 
+  const session = await getSession(request.headers.get("cookie"));
+
+  const isAuthenticated = session.has("userId");
+
   return json(
-    { locale },
+    { locale, isAuthenticated },
     {
       headers: {
         "Set-Cookie": await localeCookie.serialize(locale),
@@ -41,6 +46,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
 export function Layout({ children }: { children: React.ReactNode }) {
   const loaderData = useRouteLoaderData<typeof loader>("root");
+  console.log("🚀 ~ Layout ~ loaderData:", loaderData);
 
   const navigation = useNavigation();
 
@@ -81,7 +87,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body>
-        <Header />
+        <Header isAuthenticated={!!loaderData?.isAuthenticated} />
         {children}
         <ScrollRestoration />
         <Scripts />

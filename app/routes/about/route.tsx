@@ -1,4 +1,4 @@
-import { useLoaderData, useNavigation } from "@remix-run/react";
+import { useLoaderData } from "@remix-run/react";
 import { json } from "@remix-run/node";
 export async function loader() {
   await new Promise((resolve) => setTimeout(resolve, 1500));
@@ -8,9 +8,6 @@ export async function loader() {
 export default function NewsletterRoute() {
   const loaderData = useLoaderData<typeof loader>();
 
-  const navigation = useNavigation();
-
-  console.log({ navigation });
   return (
     <main>
       <section>

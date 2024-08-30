@@ -1,6 +1,10 @@
 import { Form, Link } from "@remix-run/react";
 
-export default function Header() {
+interface HeaderProps {
+  isAuthenticated: boolean;
+}
+
+export default function Header({ isAuthenticated }: HeaderProps) {
   return (
     <header className="flex flex-row justify-between w-full bg-slate-100 justify-center p-4">
       <ul className="flex flex-row gap-4">
@@ -24,6 +28,14 @@ export default function Header() {
             English
           </button>
         </Form>
+      </div>
+
+      <div>
+        {isAuthenticated ? (
+          <Link to="/logout">Logout</Link>
+        ) : (
+          <Link to="/login">Login</Link>
+        )}
       </div>
     </header>
   );
